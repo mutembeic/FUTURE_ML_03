@@ -1,20 +1,28 @@
 import streamlit as st
 import os
+import base64
+import json
 from google.api_core.exceptions import InvalidArgument
-from google.cloud.dialogflow_cx_v3.services.agents import AgentsClient
 from google.cloud.dialogflow_cx_v3.services.sessions import SessionsClient
-from google.cloud.dialogflow_cx_v3.types.session import TextInput, QueryInput, QueryParameters, DetectIntentRequest
-
-# --- CONFIGURATION (IMPORTANT: Fill these in!) ---
-
-# Find these in your Dialogflow CX agent's URL:
-# https://dialogflow.cloud.google.com/cx/projects/PROJECT_ID/locations/LOCATION/agents/AGENT_ID/flows/...
+from google.cloud.dialogflow_cx_v3.types.session import TextInput, QueryInput, DetectIntentRequest
+# --- CONFIGURATION  
 PROJECT_ID = "futureml-chatbot"  # Your Google Cloud Project ID
 LOCATION = "us-central1"           # The location of your agent (e.g., 'us-central1')
 AGENT_ID = "d7b93141-ee5d-4ff9-a7eb-1b2024a41602"         # The long ID of your agent
 
 # This must match the name of your JSON key file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'google_credentials.json'
+creds_path = "google_credentials.json"
+
+# Deployed on Streamlit Cloud
+if "GCP_CREDENTIALS_BASE64" in st.secrets:
+    # Decode the base64 secret and write it to a temporary file
+    creds_base64 = st.secrets["GCP_CREDENTIALS_BASE64"]
+    creds_json_str = base64.b64decode(creds_base64).decode("utf-8")
+    with open(creds_path, "w") as f:
+        f.write(creds_json_str)
+
+# Set the environment variable to point to the credentials file
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = creds_path
 
 
 # --- DIALOGFLOW CLIENT SETUP ---
