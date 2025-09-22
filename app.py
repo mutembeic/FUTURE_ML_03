@@ -6,12 +6,12 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# --- GLOBAL CONFIGURATION ---
+#GLOBAL CONFIGURATION
  
 if 'BOT_MODE' not in st.session_state:
-    st.session_state.BOT_MODE = "Dialogflow"  # 
+    st.session_state.BOT_MODE = "Dialogflow"  
 
-# --- DIALOGFLOW SETUP (PRIMARY BOT) ---
+#DIALOGFLOW SETUP (PRIMARY BOT)
 try:
     from google.cloud import dialogflowcx_v3 as dialogflowcx
 
@@ -61,7 +61,7 @@ except Exception:
     st.session_state.BOT_MODE = "Local"
 
 
-# --- LOCAL SEMANTIC BOT SETUP (FALLBACK BOT) ---
+#LOCAL SEMANTIC BOT SETUP (FALLBACK BOT)  
 @st.cache_resource
 def load_local_bot_resources():
     """Load resources for the self-contained bot."""
@@ -88,7 +88,7 @@ def get_local_response(user_query, confidence_threshold=0.5):
     else:
         return fallback_answer
 
-# --- MAIN APP LOGIC ---
+#MAIN APP LOGIC
 st.set_page_config(page_title="Customer Support Bot", layout="centered")
 
 st.title("🤖 Globe Trotter Goods Support")
@@ -114,7 +114,7 @@ if prompt := st.chat_input("Ask about shipping, returns, or orders..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # --- INTELLIGENT ROUTING LOGIC ---
+    #INTELLIGENT ROUTING LOGIC
     bot_response = ""
     try:
         # Check if we should be using Dialogflow
