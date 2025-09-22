@@ -3,14 +3,13 @@ import os
 import base64
 import json
 from google.api_core.exceptions import InvalidArgument
-from google.cloud.dialogflow_cx_v3.services.sessions import SessionsClient
-from google.cloud.dialogflow_cx_v3.types.session import TextInput, QueryInput, DetectIntentRequest
-# --- CONFIGURATION  
-PROJECT_ID = "futureml-chatbot"  # Your Google Cloud Project ID
-LOCATION = "us-central1"           # The location of your agent (e.g., 'us-central1')
-AGENT_ID = "d7b93141-ee5d-4ff9-a7eb-1b2024a41602"         # The long ID of your agent
+from google.cloud import dialogflowcx_v3 as dialogflowcx
 
-# This must match the name of your JSON key file
+# --- CONFIGURATION  
+PROJECT_ID = "futureml-chatbot"   
+LOCATION = "us-central1"         
+AGENT_ID = "d7b93141-ee5d-4ff9-a7eb-1b2024a41602"   
+ 
 creds_path = "google_credentials.json"
 
 # Deployed on Streamlit Cloud
@@ -32,12 +31,12 @@ def detect_intent_texts(project_id, location_id, agent_id, session_id, texts, la
     session_path = f"projects/{project_id}/locations/{location_id}/agents/{agent_id}/sessions/{session_id}"
     client_options = {"api_endpoint": f"{location_id}-dialogflow.googleapis.com"}
     
-    sessions_client = SessionsClient(client_options=client_options)
+    sessions_client = dialogflowcx.SessionsClient(client_options=client_options)
 
     for text in texts:
-        text_input = TextInput(text=text)
-        query_input = QueryInput(text=text_input, language_code=language_code)
-        request = DetectIntentRequest(
+        text_input = dialogflowcx.TextInput(text=text)
+        query_input = dialogflowcx.QueryInput(text=text_input, language_code=language_code)
+        request = dialogflowcx.DetectIntentRequest(
             session=session_path, query_input=query_input
         )
         response = sessions_client.detect_intent(request=request)
@@ -75,15 +74,15 @@ if prompt := st.chat_input("How can I help you?"):
     # Get bot response
     try:
         # Generate a unique session ID for this user's conversation
-        session_id = st.session_state.get("session_id", "my-session-12345") # Simple session ID for demo
+        session_id = st.session_state.get("session_id", "my-session-12345")  # Simple session ID for demo
         st.session_state.session_id = session_id
 
         # Replace AGENT_ID placeholder check
         if AGENT_ID == "YOUR_AGENT_ID":
-             bot_response_texts = ["Error: Please update the AGENT_ID in the app.py script."]
+            bot_response_texts = ["Error: Please update the AGENT_ID in the app.py script."]
         else:
             bot_response_texts = detect_intent_texts(
-                PROJECT_ID, LOCATION, AGENT_ID, session_id, [prompt], 'en'
+                PROJECT_ID, LOCATION, AGENT_ID, session_id, [prompt], "en"
             )
         
         bot_response = " ".join(bot_response_texts)
@@ -91,8 +90,7 @@ if prompt := st.chat_input("How can I help you?"):
     except Exception as e:
         st.error("Sorry, there was an error connecting to the chatbot service.")
         bot_response = "I'm having trouble connecting right now. Please try again later."
-        print(e) # For debugging in the logs
-
+        print(e)   
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         st.markdown(bot_response)
