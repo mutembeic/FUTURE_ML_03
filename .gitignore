@@ -1,0 +1,4 @@
+# Google Cloud Credentials
+google_credentials.json
+__pycache__/
+*.pyc
