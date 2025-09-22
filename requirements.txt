@@ -1,4 +1,5 @@
-streamlit
-google-cloud-dialogflow-cx
-pandas
-numpy
+streamlit==1.28.0
+pandas==1.5.3
+numpy==1.26.4
+google-cloud-dialogflow-cx==1.12.0
+protobuf==4.21.12 
