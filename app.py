@@ -9,9 +9,9 @@ from google.cloud.dialogflow_cx_v3.types.session import TextInput, QueryInput, Q
 
 # Find these in your Dialogflow CX agent's URL:
 # https://dialogflow.cloud.google.com/cx/projects/PROJECT_ID/locations/LOCATION/agents/AGENT_ID/flows/...
-PROJECT_ID = "my-internship-chatbot"  # Your Google Cloud Project ID
+PROJECT_ID = "futureml-chatbot"  # Your Google Cloud Project ID
 LOCATION = "us-central1"           # The location of your agent (e.g., 'us-central1')
-AGENT_ID = "YOUR_AGENT_ID"         # The long ID of your agent
+AGENT_ID = "d7b93141-ee5d-4ff9-a7eb-1b2024a41602"         # The long ID of your agent
 
 # This must match the name of your JSON key file
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'google_credentials.json'
